@@ -22,3 +22,19 @@ class MenuItems(Base):
         return f"Menu item {self.id}: " \
             + f"{self.item}, " \
             + f"{self.price}"
+
+
+class Mod(Base):
+    __tablename__ = "mods"
+
+    id = Column(Integer, primary_key=True)
+    mod_item = Column(String(), nullable=False)
+    mod_price = Column(Float(), nullable=False)
+
+    def __repr__(self):
+        return f"Modification: {self.id}: " \
+            + f"{self.mod_item}, " \
+            + f"{self.mod_price}"
+
+
+Base.metadata.create_all(engine)
