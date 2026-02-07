@@ -1,6 +1,6 @@
 from sqlalchemy import ForeignKey, MetaData, create_engine, Column, Integer, Float, String
 from sqlalchemy.ext.declarative import declarative_base
-# from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import relationship, backref
 
 convention = {
     "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
@@ -45,6 +45,19 @@ class Customer(Base):
     last_name = Column(String(50))
     email = Column(String(), unique=True)
 
+    # relationships
+    orders = relationship("Order", backref="customer")
+
     def __repr__(self):
         return f"Customer: {self.id}: " \
             + f"{self.first_name}"
+
+
+class Order(Base):
+    __tablename__ = "orders"
+    id = Column(Integer(), primary_key=True)
+    # relationships
+    customer_id = Column(Integer(), ForeignKey('customers.id'))
+
+    def __repr__(self):
+        return f"Order Number: {self.id}"
