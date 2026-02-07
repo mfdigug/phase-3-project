@@ -1,4 +1,4 @@
-from sqlalchemy import Table, ForeignKey, MetaData, create_engine, Column, Integer, Float, String
+from sqlalchemy import Table, ForeignKey, MetaData, Column, Integer, Float, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, backref
 
@@ -6,8 +6,6 @@ convention = {
     "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
 }
 metadata = MetaData(naming_convention=convention)
-
-engine = create_engine('sqlite:///cafe.db')
 Base = declarative_base(metadata=metadata)
 
 
@@ -65,6 +63,7 @@ class Order(Base):
     id = Column(Integer(), primary_key=True)
     # relationships
     customer_id = Column(Integer(), ForeignKey('customers.id'))
+    # deleting an order deletes all its orderitems
     order_items = relationship(
         "OrderItem", backref="order", cascade="all, delete-orphan")
 
@@ -77,7 +76,9 @@ class OrderItem(Base):
     id = Column(Integer(), primary_key=True)
     # relationships
     menu_item_id = Column(Integer(), ForeignKey("menu_items.id"))
+    # if an order is deleted, delete associated order items
     order_id = Column(Integer(), ForeignKey("orders.id", ondelete="CASCADE"))
+    # link to join table - allow passive deletes to handle delete associated items
     mods = relationship("Mod", secondary="order_item_mods",
                         back_populates="order_items", passive_deletes=True)
 
@@ -85,9 +86,10 @@ class OrderItem(Base):
 order_item_mod = Table(
     "order_item_mods",
     Base.metadata,
+    # if an order_item is deleted delete all associated mods -> ondelete="CASCADE"
     Column("order_item_id", ForeignKey(
         "order_items.id", ondelete="CASCADE"), primary_key=True),
+    # no cascade - only want to remove() mods from order items
     Column("mod_id", ForeignKey("mods.id"), primary_key=True),
     extend_existing=True
-
 )
