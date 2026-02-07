@@ -1,4 +1,4 @@
-from sqlalchemy import ForeignKey, MetaData, create_engine, Column, Integer, Float, String
+from sqlalchemy import Table, ForeignKey, MetaData, create_engine, Column, Integer, Float, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, backref
 
@@ -18,6 +18,9 @@ class MenuItems(Base):
     item = Column(String(), nullable=False)
     price = Column(Float(), nullable=False)
 
+    # relationships
+    order_items = relationship('OrderItem', backref="menu_item")
+
     def __repr__(self):
         return f"Menu item {self.id}: " \
             + f"{self.item}, " \
@@ -30,6 +33,10 @@ class Mod(Base):
     id = Column(Integer, primary_key=True)
     mod_item = Column(String(), nullable=False)
     mod_price = Column(Float(), nullable=False)
+
+    # relationships
+    order_items = relationship(
+        "OrderItem", secondary="order_item_mods", back_populates="mods")
 
     def __repr__(self):
         return f"Modification: {self.id}: " \
@@ -58,6 +65,29 @@ class Order(Base):
     id = Column(Integer(), primary_key=True)
     # relationships
     customer_id = Column(Integer(), ForeignKey('customers.id'))
+    order_items = relationship(
+        "OrderItem", backref="order", cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"Order Number: {self.id}"
+
+
+class OrderItem(Base):
+    __tablename__ = "order_items"
+    id = Column(Integer(), primary_key=True)
+    # relationships
+    menu_item_id = Column(Integer(), ForeignKey("menu_items.id"))
+    order_id = Column(Integer(), ForeignKey("orders.id", ondelete="CASCADE"))
+    mods = relationship("Mod", secondary="order_item_mods",
+                        back_populates="order_items", passive_deletes=True)
+
+
+order_item_mod = Table(
+    "order_item_mods",
+    Base.metadata,
+    Column("order_item_id", ForeignKey(
+        "order_items.id", ondelete="CASCADE"), primary_key=True),
+    Column("mod_id", ForeignKey("mods.id"), primary_key=True),
+    extend_existing=True
+
+)
