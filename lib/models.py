@@ -37,4 +37,14 @@ class Mod(Base):
             + f"{self.mod_price}"
 
 
-Base.metadata.create_all(engine)
+class Customer(Base):
+    __tablename__ = "customers"
+
+    id = Column(Integer(), primary_key=True)
+    first_name = Column(String(50), nullable=False)
+    last_name = Column(String(50))
+    email = Column(String(), unique=True)
+
+    def __repr__(self):
+        return f"Customer: {self.id}: " \
+            + f"{self.first_name}"
