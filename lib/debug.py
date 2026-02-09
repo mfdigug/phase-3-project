@@ -28,6 +28,8 @@ if __name__ == '__main__':
     Phil = Customer(first_name="Phil", last_name="Smith",
                     email="alice@example.com")
 
+    order1 = Order(customer=Maria)
+
     session.add_all([espresso, macchiato, cappuccino, flat_white,
                     extra_shot, sugar, small, regular, large, Maria, Jo, Phil])
     session.commit()

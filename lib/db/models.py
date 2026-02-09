@@ -69,6 +69,10 @@ class Order(Base):
         "OrderItem", backref="order", cascade="all, delete-orphan")
     # deleting an order deletes all its orderitems
 
+    # methods
+    def order_total(self):
+        return sum(order_item.subtotal() for order_item in self.order_items)
+
     def __repr__(self):
         return f"Order Number: {self.id}"
 
@@ -85,6 +89,9 @@ class OrderItem(Base):
     mods = relationship("Mod", secondary="order_item_mods",
                         back_populates="order_items", passive_deletes=True)
     # passive deletes -> deletes mods associated with order_items
+
+    def subtotal(self):
+        return self.menu_item.price + sum(mod.mod_price for mod in self.mods)
 
     def __repr__(self):
         return f"Item No {self.id}. {self.menu_item.item}, add ons:{[mod.mod_item for mod in self.mods]}"
