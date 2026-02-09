@@ -7,6 +7,11 @@ def get_menu_items(session):
     return items
 
 
+#get mods
+def get_mods(session):
+    mods = session.query(Mod).all()
+    return mods
+
 # 2. Find customer
 def get_customer_by_email(session, email):
     customer = session.query(Customer).filter(Customer.email == email).first()
