@@ -1,5 +1,5 @@
 from db.db_setup import session
-from helpers import get_customer_by_email, get_menu_items, add_to_customers
+from helpers import get_customer_by_email, get_menu_items, add_to_customers, create_order, add_item, add_mod
 
 
 # 1
@@ -30,6 +30,32 @@ def create_new_customer(email):
     add_to_customers(session, new_first_name, new_last_name, new_email)
 
 
+# 3
+def new_order():
+    customer_id = input("Enter customer id: ")
+    create_order(session, customer_id)
+    # flush?
+
+
+# 4
+def new_item():
+    order_id = input("Enter order id: ")
+    menu_item_id = input("Enter menu item number: ")
+    quantity = input("Enter quantity: ")
+    print(f"Order Number: {order_id}, Item: {menu_item_id}")
+    add_item(session, order_id, menu_item_id, quantity)
+
+
+def add_mod_to_item():
+    item_id = input("Enter item_id: ")
+    while True:
+        mod = input("Add modification (or type 'q' to quit): ")
+        if mod.lower() == 'q':
+            break
+        else:
+            add_mod(session, item_id, mod)
+
+
 if __name__ == "__main__":
     print("☕ CLI Cafe started")
 
@@ -37,7 +63,10 @@ if __name__ == "__main__":
         print("Options:")
         print("1. View menu")
         print("2. Find customer")
-        print("3. Exit")
+        print("3. New Order")
+        print("4. Add Item")
+        print("5. Add mod to item")
+        print("8. Exit")
 
         choice = input("What would you like to do? Select a number: ")
 
@@ -46,6 +75,12 @@ if __name__ == "__main__":
         elif choice == "2":
             find_customer()
         elif choice == "3":
+            new_order()
+        elif choice == "4":
+            new_item()
+        elif choice == "5":
+            add_mod_to_item()
+        elif choice == "8":
             print("Ciao!")
             break
         else:

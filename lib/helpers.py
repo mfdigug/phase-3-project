@@ -36,21 +36,45 @@ def add_to_customers(session, new_first_name, new_last_name, new_email):
     # 2.1 Add order_items (use flush?)
 
 
-def create_order():
-    pass
-
-    # find_customer_by_id
-    # create_order (with customer id)
-
-    # view menu
-
-
-def delete_order_item(session, item_id):
-    item = session.query(OrderItem).get(item_id)
-    if not item:
-        return False
-    session.delete(item)
+# 3 create order
+def create_order(session, customer_id):
+    new_order = Order(
+        customer_id=customer_id,
+    )
+    session.add(new_order)
     session.commit()
+    print(new_order.id)
+
+
+def add_item(session, order_id, menu_item_id, quantity):
+    new_item = OrderItem(
+        order_id=order_id,
+        menu_item_id=menu_item_id,
+        quantity=quantity
+    )
+    session.add(new_item)
+    session.commit()
+    print(f"{new_item.id}")
+
+
+def add_mod(session, item_id, mod):
+    item = int(item_id)
+    updated_item = session.query(OrderItem).filter(
+        OrderItem.id == item).first()
+    print(updated_item)
+
+    # modded_item = updated_item.append(mod)
+    # print(modded_item)
+    # session.add(modded_item)
+    # session.commit()
+
+
+# def delete_order_item(session, item_id):
+#     item = session.query(OrderItem).get(item_id)
+#     if not item:
+#         return False
+#     session.delete(item)
+#     session.commit()
 
     # 2.1.1 Add item mods
     # 2.2 Add item to order
