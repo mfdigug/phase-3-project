@@ -1,27 +1,28 @@
 from db.models import Base, MenuItem, Mod, Customer, Order, OrderItem
 
 
-# intro - Welcome, what would you like to do:
+# 1
+def get_menu_items(session):
+    items = session.query(MenuItem).all()
+    return items
 
-# 1. Add new customer
 
-
+# 2. Find customer
 def get_customer_by_email(session, email):
     customer = session.query(Customer).filter(Customer.email == email).first()
     return customer
 
 
-def add_customer():
-    pass
+# 2.1 if not customer - add customer
+def add_to_customers(session, new_first_name, new_last_name, new_email):
+    new_customer = Customer(
+        first_name=new_first_name,
+        last_name=new_last_name,
+        email=new_email
+    )
 
-    # name = input(“Enter user name: ”)
-    # if get_customer_by_name(name):
-    # print (f“customer already exists”)
-    # return
-    # else:
-    # session.add(customer(name=name)
-    # session.commit()
-    # print (f“customer {name} added”)
+    session.add(new_customer)
+    session.commit()
 
     # check customer's orders
     # customer.orders
@@ -34,24 +35,22 @@ def add_customer():
 
     # 2.1 Add order_items (use flush?)
 
-    def create_order():
-        pass
+
+def create_order():
+    pass
 
     # find_customer_by_id
     # create_order (with customer id)
 
     # view menu
 
-    def view_menu_items(session):
-        items = session.query(MenuItem).all()
-        return items
 
-    def delete_order_item(session, item_id):
-        item = session.query(OrderItem).get(item_id)
-        if not item:
-            return False
-        session.delete(item)
-        session.commit()
+def delete_order_item(session, item_id):
+    item = session.query(OrderItem).get(item_id)
+    if not item:
+        return False
+    session.delete(item)
+    session.commit()
 
     # 2.1.1 Add item mods
     # 2.2 Add item to order

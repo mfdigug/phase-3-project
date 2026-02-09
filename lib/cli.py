@@ -1,26 +1,55 @@
 from db.db_setup import session
-from helpers import get_customer_by_email
+from helpers import get_customer_by_email, get_menu_items, add_to_customers
 
 
-def run():
-    print("☕ CLI Cafe started")
+# 1
+def view_menu_items():
+    menu_items = get_menu_items(session)
+    for item in menu_items:
+        print(f"{item.id}. {item.item}")
 
-    while True:
-        email = input("Enter customer email (or 'quit' to exit): ").strip()
 
-        if email.lower() == "quit":
-            print("Ciao")
-            break
+# 2
+def find_customer():
+    email = input("Enter customer email (or 'quit' to exit): ").strip()
+    customer = get_customer_by_email(session, email)
+    if customer:
+        print(f"Customer found: {customer.id} {customer.first_name}")
+    else:
+        print("Customer not found")
+        add_customer = input("Would you like to add a customer? Y/N: ")
+        if add_customer.lower() == "y":
+            create_new_customer(email)
 
-        customer = get_customer_by_email(session, email)
-        if customer:
-            print(f"Customer found: {customer.id} {customer.first_name}")
-        else:
-            print("Customer not found")
+
+# 2.1
+def create_new_customer(email):
+    new_first_name = input("Enter customer's first name: ")
+    new_last_name = input("Enter customer's last name: ")
+    new_email = email
+    add_to_customers(session, new_first_name, new_last_name, new_email)
 
 
 if __name__ == "__main__":
-    run()
+    print("☕ CLI Cafe started")
+
+    while True:
+        print("Options:")
+        print("1. View menu")
+        print("2. Find customer")
+        print("3. Exit")
+
+        choice = input("What would you like to do? Select a number: ")
+
+        if choice == "1":
+            view_menu_items()
+        elif choice == "2":
+            find_customer()
+        elif choice == "3":
+            print("Ciao!")
+            break
+        else:
+            print("Invalid choice. Please view the menu and select an option")
 
 
 # options
