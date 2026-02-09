@@ -1,6 +1,8 @@
-from db.models import Base, MenuItem, Mod, Customer, Order, OrderItem, order_item_mod
+from db.models import Base, MenuItem, Mod, Customer, Order, OrderItem
+from helpers import get_customer_by_email
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+
 
 if __name__ == '__main__':
     engine = create_engine('sqlite:///:memory:')
