@@ -86,6 +86,9 @@ class OrderItem(Base):
                         back_populates="order_items", passive_deletes=True)
     # passive deletes -> deletes mods associated with order_items
 
+    def __repr__(self):
+        return f"Item No {self.id}. {self.menu_item.item}, add ons:{[mod.mod_item for mod in self.mods]}"
+
 
 order_item_mod = Table(
     "order_item_mods",

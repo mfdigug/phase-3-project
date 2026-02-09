@@ -15,6 +15,7 @@ if __name__ == '__main__':
     flat_white = MenuItem(item="flat white", price=5.50)
     # Fake mods
     extra_shot = Mod(mod_item="extra shot", mod_price=.50)
+    extra_hot = Mod(mod_item="extra hot", mod_price=0)
     sugar = Mod(mod_item="sugar", mod_price=0)
     small = Mod(mod_item="small", mod_price=0)
     regular = Mod(mod_item="regular", mod_price=.50)
