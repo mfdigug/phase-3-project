@@ -1,4 +1,4 @@
-from sqlalchemy import Table, ForeignKey, MetaData, Column, Integer, Float, String
+from sqlalchemy import Table, ForeignKey, MetaData, Column, Integer, Float, String, func, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, backref
 
@@ -61,11 +61,13 @@ class Customer(Base):
 class Order(Base):
     __tablename__ = "orders"
     id = Column(Integer(), primary_key=True)
+    created_at = Column(DateTime(), server_default=func.now())
+
     # relationships
     customer_id = Column(Integer(), ForeignKey('customers.id'))
-    # deleting an order deletes all its orderitems
     order_items = relationship(
         "OrderItem", backref="order", cascade="all, delete-orphan")
+    # deleting an order deletes all its orderitems
 
     def __repr__(self):
         return f"Order Number: {self.id}"
@@ -74,13 +76,15 @@ class Order(Base):
 class OrderItem(Base):
     __tablename__ = "order_items"
     id = Column(Integer(), primary_key=True)
+    quantity = Column(Integer(), default=1)
+
     # relationships
     menu_item_id = Column(Integer(), ForeignKey("menu_items.id"))
-    # if an order is deleted, delete associated order items
     order_id = Column(Integer(), ForeignKey("orders.id", ondelete="CASCADE"))
-    # link to join table - allow passive deletes to handle delete associated items
+    # if an order is deleted, delete associated order items
     mods = relationship("Mod", secondary="order_item_mods",
                         back_populates="order_items", passive_deletes=True)
+    # passive deletes -> deletes mods associated with order_items
 
 
 order_item_mod = Table(
