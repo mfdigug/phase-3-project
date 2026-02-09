@@ -9,7 +9,7 @@ metadata = MetaData(naming_convention=convention)
 Base = declarative_base(metadata=metadata)
 
 
-class MenuItems(Base):
+class MenuItem(Base):
     __tablename__ = "menu_items"
 
     id = Column(Integer(), primary_key=True)
