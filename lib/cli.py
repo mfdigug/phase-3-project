@@ -16,6 +16,8 @@ def view_mods():
         print(f"{mod.id}. {mod.mod_item}, + ${mod.mod_price}")
 
 # 3
+
+
 def find_customer():
     email = input("Enter customer email (or 'quit' to exit): ").strip()
     customer = get_customer_by_email(session, email)
@@ -52,6 +54,8 @@ def new_item():
     add_item(session, order_id, menu_item_id, quantity)
 
 # 6
+
+
 def add_mod_to_item():
     item_id = input("Enter item_id: ")
     while True:
@@ -59,7 +63,7 @@ def add_mod_to_item():
         if mod.lower() == 'q':
             break
         else:
-            add_mod(session, item_id, mod)
+            add_mod(session, int(item_id), int(mod))
 
 
 if __name__ == "__main__":

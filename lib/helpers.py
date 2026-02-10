@@ -7,12 +7,14 @@ def get_menu_items(session):
     return items
 
 
-#get mods
+# get mods
 def get_mods(session):
     mods = session.query(Mod).all()
     return mods
 
 # 2. Find customer
+
+
 def get_customer_by_email(session, email):
     customer = session.query(Customer).filter(Customer.email == email).first()
     return customer
@@ -62,16 +64,19 @@ def add_item(session, order_id, menu_item_id, quantity):
     print(f"{new_item.id}")
 
 
-def add_mod(session, item_id, mod):
-    item = int(item_id)
-    updated_item = session.query(OrderItem).filter(
-        OrderItem.id == item).first()
-    print(updated_item)
+def add_mod(session, item_id, mod_id):
+    order_item = session.query(OrderItem).filter(
+        OrderItem.id == item_id).first()
+    mod = session.query(Mod).filter(Mod.id == mod_id).first()
 
-    # modded_item = updated_item.append(mod)
-    # print(modded_item)
-    # session.add(modded_item)
-    # session.commit()
+    if not order_item or not mod:
+        print("item or mod not found")
+        return
+
+    order_item.mods.append(mod)
+    print(order_item.mods)
+    session.commit()
+    print("Mod added!")
 
 
 # def delete_order_item(session, item_id):
