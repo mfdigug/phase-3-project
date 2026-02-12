@@ -1,5 +1,5 @@
 from db.db_setup import session
-from helpers import get_customer_by_email, get_menu_items, add_to_customers, create_order, add_item, add_mod, get_mods
+from helpers import get_customer_by_email, add_to_customers, get_menu_items, get_mods, create_order, add_item, add_mod, view_order, update_order
 
 
 # 1
@@ -41,7 +41,7 @@ def create_new_customer(email):
 # 4
 def new_order():
     customer_id = input("Enter customer id: ")
-    create_order(session, customer_id)
+    create_order(session, int(customer_id))
     # flush?
 
 
@@ -51,7 +51,7 @@ def new_item():
     menu_item_id = input("Enter menu item number: ")
     quantity = input("Enter quantity: ")
     print(f"Order Number: {order_id}, Item: {menu_item_id}")
-    add_item(session, order_id, menu_item_id, quantity)
+    add_item(session, int(order_id), int(menu_item_id), int(quantity))
 
 # 6
 
@@ -66,6 +66,24 @@ def add_mod_to_item():
             add_mod(session, int(item_id), int(mod))
 
 
+# 7
+def finalise_order():
+    order_id = input("Enter order number: ")
+    while True:
+        print("1. View order")
+        print("2. Make changes")
+        print("3. Confirm")
+
+        option = input("Please select a number (or type 'q' to exit): ")
+
+        if option == "1":
+            view_order(session, int(order_id))
+        elif option == "2":
+            update_order()
+        elif option == "3":
+            print(f"Order {order_id} confirmed")
+
+
 if __name__ == "__main__":
     print("☕ CLI Cafe started")
 
@@ -77,6 +95,7 @@ if __name__ == "__main__":
         print("4. New Order")
         print("5. Add Item")
         print("6. Add mod to item")
+        print("7. Finalise order")
         print("8. Exit")
 
         choice = input("What would you like to do? Select a number: ")
@@ -94,23 +113,9 @@ if __name__ == "__main__":
         elif choice == "6":
             add_mod_to_item()
         elif choice == "7":
+            finalise_order()
+        elif choice == "8":
             print("Ciao!")
             break
         else:
             print("Invalid choice. Please view the menu and select an option")
-
-
-# options
-# intro - Welcome, what would you like to do:
-# 1. Add new customer
-# 2. New order
-# find_customer_by_id
-# create_order (with customer id)
-# 2.1 Add order_items (use flush?)
-# 2.1.1 Add item mods
-# 2.2 Add items to order
-# 3. Review order and price
-# 3.1 Update existing items
-# 3.2 View total_price
-# 4. Submit order
-# 5. Cafe level => view total amount made on a particular date?

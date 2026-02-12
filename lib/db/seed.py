@@ -62,10 +62,10 @@ def create_customers():
 
 
 def delete_records():
-    # session.query(Order).delete()
-    # session.query(OrderItem).delete()
-    session.query(MenuItem).delete()
+    session.query(OrderItem).delete()
+    session.query(Order).delete()
     session.query(Mod).delete()
+    session.query(MenuItem).delete()
     session.query(Customer).delete()
 
     session.commit()
@@ -76,5 +76,3 @@ if __name__ == '__main__':
     create_menu_items()
     create_mods()
     create_customers()
-    # create_orders()
-    # create_order_items()

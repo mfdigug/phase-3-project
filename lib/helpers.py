@@ -1,26 +1,27 @@
 from db.models import Base, MenuItem, Mod, Customer, Order, OrderItem
 
 
-# 1
+# 1 View Menu
 def get_menu_items(session):
     items = session.query(MenuItem).all()
     return items
 
 
-# get mods
+# 2 View Mods
 def get_mods(session):
     mods = session.query(Mod).all()
     return mods
 
-# 2. Find customer
+# 3. Find/Add customer
 
 
 def get_customer_by_email(session, email):
     customer = session.query(Customer).filter(Customer.email == email).first()
     return customer
 
+# 3.1 if not customer - add customer
 
-# 2.1 if not customer - add customer
+
 def add_to_customers(session, new_first_name, new_last_name, new_email):
     new_customer = Customer(
         first_name=new_first_name,
@@ -43,7 +44,7 @@ def add_to_customers(session, new_first_name, new_last_name, new_email):
     # 2.1 Add order_items (use flush?)
 
 
-# 3 create order
+# 4 New Order
 def create_order(session, customer_id):
     new_order = Order(
         customer_id=customer_id,
@@ -51,6 +52,8 @@ def create_order(session, customer_id):
     session.add(new_order)
     session.commit()
     print(new_order.id)
+
+# 5 Add Order Item to Order
 
 
 def add_item(session, order_id, menu_item_id, quantity):
@@ -62,6 +65,8 @@ def add_item(session, order_id, menu_item_id, quantity):
     session.add(new_item)
     session.commit()
     print(f"{new_item.id}")
+
+# 6 Add mod to item
 
 
 def add_mod(session, item_id, mod_id):
@@ -78,18 +83,38 @@ def add_mod(session, item_id, mod_id):
     session.commit()
     print("Mod added!")
 
+# 7 Finalise order = view/update/confirm
 
-# def delete_order_item(session, item_id):
-#     item = session.query(OrderItem).get(item_id)
-#     if not item:
-#         return False
-#     session.delete(item)
-#     session.commit()
 
-    # 2.1.1 Add item mods
-    # 2.2 Add item to order
-    # 3. Review order and price
-    # 3.1 Update existing items
-    # 3.2 View total_price
-    # 4. Submit order
-    # 5. Cafe level => view total amount made on a particular date?
+def view_order(session, order_id):
+    order = session.query(Order).filter(Order.id == order_id).first()
+
+    if not order:
+        print("Order not found")
+        return
+
+    print("*" * 10)
+    print(f"Order: {order.id}")
+    print(f"Customer: {order.customer.first_name}\n")
+    print("*" * 10)
+    for item in order.order_items:
+        print(f"{item.menu_item.item} ${item.menu_item.price:.2f}\n")
+        for mod in item.mods:
+            print(f" + {mod.mod_item} (${mod.mod_price:.2f})\n")
+        print(f"${item.subtotal()}\n")
+    print("*" * 10)
+    print(f"${order.order_total()}\n")
+    print("*" * 10)
+
+
+# update order
+def update_order():
+    pass
+
+
+def delete_order_item(session, item_id):
+    item = session.query(OrderItem).get(item_id)
+    if not item:
+        return False
+    session.delete(item)
+    session.commit()

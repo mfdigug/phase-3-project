@@ -17,7 +17,7 @@ class MenuItem(Base):
     price = Column(Float(), nullable=False)
 
     # relationships
-    order_items = relationship('OrderItem', backref="menu_item")
+    order_items = relationship('OrderItem', back_populates="menu_item")
 
     def __repr__(self):
         return f"Menu item {self.id}: " \
@@ -84,6 +84,7 @@ class OrderItem(Base):
 
     # relationships
     menu_item_id = Column(Integer(), ForeignKey("menu_items.id"))
+    menu_item = relationship("MenuItem", back_populates="order_items")
     order_id = Column(Integer(), ForeignKey("orders.id", ondelete="CASCADE"))
     # if an order is deleted, delete associated order items
     mods = relationship("Mod", secondary="order_item_mods",
@@ -91,7 +92,7 @@ class OrderItem(Base):
     # passive deletes -> deletes mods associated with order_items
 
     def subtotal(self):
-        return self.menu_item.price + sum(mod.mod_price for mod in self.mods)
+        return self.quantity*(self.menu_item.price + sum(mod.mod_price for mod in self.mods))
 
     def __repr__(self):
         return f"Item No {self.id}. {self.menu_item.item}, add ons:{[mod.mod_item for mod in self.mods]}"
