@@ -19,18 +19,22 @@ def view_mods():
 
 
 def find_customer():
-    email = input("Enter customer email (or 'quit' to exit): ").strip()
-    customer = get_customer_by_email(session, email)
-    if customer:
-        print(f"Customer found: {customer.id} {customer.first_name}")
+    email = input("Enter customer email (or 'q' to exit): ").strip()
+    if email.lower() == "q":
+        return
     else:
-        print("Customer not found")
-        add_customer = input("Would you like to add a customer? Y/N: ")
-        if add_customer.lower() == "y":
-            create_new_customer(email)
-
+        customer = get_customer_by_email(session, email)
+        if customer:
+            print(f"Customer found: {customer.id} {customer.first_name}")
+        else:
+            print("Customer not found")
+            add_customer = input("Would you like to add a customer? Y/N: ")
+            if add_customer.lower() == "y":
+                create_new_customer(email)
 
 # 3.1
+
+
 def create_new_customer(email):
     new_first_name = input("Enter customer's first name: ")
     new_last_name = input("Enter customer's last name: ")
