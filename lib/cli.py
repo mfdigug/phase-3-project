@@ -1,5 +1,5 @@
 from db.db_setup import session
-from helpers import get_customer_by_email, add_to_customers, get_menu_items, get_mods, create_order, add_item, add_mod, view_order, update_order, delete_order
+from helpers import get_customer_by_email, add_to_customers, get_menu_items, get_mods, create_order, add_item, add_mod, view_order, delete_order, delete_order_item
 
 
 # 1
@@ -15,9 +15,8 @@ def view_mods():
     for mod in mods:
         print(f"{mod.id}. {mod.mod_item}, + ${mod.mod_price}")
 
+
 # 3
-
-
 def find_customer():
     email = input("Enter customer email (or 'q' to exit): ").strip()
     if email.lower() == "q":
@@ -32,9 +31,8 @@ def find_customer():
             if add_customer.lower() == "y":
                 create_new_customer(email)
 
+
 # 3.1
-
-
 def create_new_customer(email):
     new_first_name = input("Enter customer's first name: ")
     new_last_name = input("Enter customer's last name: ")
@@ -57,9 +55,8 @@ def new_item():
     print(f"Order Number: {order_id}, Item: {menu_item_id}")
     add_item(session, int(order_id), int(menu_item_id), int(quantity))
 
+
 # 6
-
-
 def add_mod_to_item():
     item_id = input("Enter item_id: ")
     while True:
@@ -70,7 +67,19 @@ def add_mod_to_item():
             add_mod(session, int(item_id), int(mod))
 
 
-# 7
+# 7 Finalise/update order
+def update_order(session, order_id):
+    while True:
+        print("a. Add item")
+        print("b. Delete item")
+        choice = input("Select an action: ")
+        if choice == "a":
+            new_item()
+        elif choice == "b":
+            item_id = input("Which item would you like to delete? ")
+            delete_order_item(session, item_id)
+
+
 def finalise_order():
     order_id = input("Enter order number: ")
     view_order(session, int(order_id))
@@ -84,11 +93,12 @@ def finalise_order():
         if option == "1":
             print(f"Order {order_id} confirmed")
         elif option == "2":
-            update_order()
+            update_order(session, order_id)
         elif option == "3":
-            delete_order()
+            delete_order(session, order_id)
 
 
+# CLI Menu
 if __name__ == "__main__":
     print("☕ CLI Cafe started")
 
