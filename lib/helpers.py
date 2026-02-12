@@ -1,4 +1,4 @@
-from db.models import Base, MenuItem, Mod, Customer, Order, OrderItem
+from db.models import Base, MenuItem, Mod, Customer, OrderItemMod, Order, OrderItem
 
 
 # 1 View Menu
@@ -114,7 +114,7 @@ def delete_order_item(session, item_id):
 
 # 7.2 Delete order
 def delete_order(session, order_id):
-    order = session.query(order_id).filter(
+    order = session.query(Order).filter(
         Order.id == order_id).first()
 
     if not order:

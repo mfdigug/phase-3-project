@@ -68,16 +68,18 @@ def add_mod_to_item():
 
 
 # 7 Finalise/update order
-def update_order(session, order_id):
+def update_order(session):
     while True:
         print("a. Add item")
         print("b. Delete item")
-        choice = input("Select an action: ")
-        if choice == "a":
+        choice = input("Select an action (or 'q' to exit): ")
+        if choice.lower() == "q":
+            break
+        elif choice.lower() == "a":
             new_item()
-        elif choice == "b":
+        elif choice.lower() == "b":
             item_id = input("Which item would you like to delete? ")
-            delete_order_item(session, item_id)
+            delete_order_item(session, int(item_id))
 
 
 def finalise_order():
@@ -88,14 +90,18 @@ def finalise_order():
         print("2. Modify order")
         print("3. Delete order")
 
-        option = input("Please select a number (or type 'q' to exit): ")
+        option = input(
+            "Please select a number (or 'q' to exit): ")
 
-        if option == "1":
+        if option.lower() == "q":
+            return
+        elif option == "1":
             print(f"Order {order_id} confirmed")
+            return
         elif option == "2":
-            update_order(session, order_id)
+            update_order(session)
         elif option == "3":
-            delete_order(session, order_id)
+            delete_order(session, int(order_id))
 
 
 # CLI Menu
