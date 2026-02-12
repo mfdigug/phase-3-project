@@ -1,5 +1,5 @@
 from db.db_setup import session
-from helpers import get_customer_by_email, add_to_customers, get_menu_items, get_mods, create_order, add_item, add_mod, view_order, update_order
+from helpers import get_customer_by_email, add_to_customers, get_menu_items, get_mods, create_order, add_item, add_mod, view_order, update_order, delete_order
 
 
 # 1
@@ -73,19 +73,20 @@ def add_mod_to_item():
 # 7
 def finalise_order():
     order_id = input("Enter order number: ")
+    view_order(session, int(order_id))
     while True:
-        print("1. View order")
-        print("2. Make changes")
-        print("3. Confirm")
+        print("1. Confirm order")
+        print("2. Modify order")
+        print("3. Delete order")
 
         option = input("Please select a number (or type 'q' to exit): ")
 
         if option == "1":
-            view_order(session, int(order_id))
+            print(f"Order {order_id} confirmed")
         elif option == "2":
             update_order()
         elif option == "3":
-            print(f"Order {order_id} confirmed")
+            delete_order()
 
 
 if __name__ == "__main__":

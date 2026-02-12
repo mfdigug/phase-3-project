@@ -1,5 +1,5 @@
 from models import Customer, MenuItem, Mod, OrderItem, Order
-from db_setup import session, engine
+from db_setup import session
 from faker import Faker
 fake = Faker()
 
@@ -49,16 +49,6 @@ def create_customers():
 
     session.add_all(customers)
     session.commit()
-
-
-# def create_orders():
-#     session.add_all()
-#     session.commit()
-
-
-# def create_order_items():
-#     session.add_all()
-#     session.commit()
 
 
 def delete_records():

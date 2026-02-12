@@ -107,14 +107,23 @@ def view_order(session, order_id):
     print("*" * 10)
 
 
-# update order
-def update_order():
-    pass
-
-
+# modify order
 def delete_order_item(session, item_id):
     item = session.query(OrderItem).get(item_id)
     if not item:
         return False
     session.delete(item)
     session.commit()
+
+
+def delete_order(session, order_id):
+    order = session.query(order_id).filter(
+        Order.id == order_id).first()
+
+    if not order:
+        print("Order not found")
+        return
+
+    session.delete(order)
+    session.commit()
+    print(f"Order number {order_id} deleted")
