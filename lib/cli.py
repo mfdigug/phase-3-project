@@ -1,22 +1,9 @@
 from db.db_setup import session
-from helpers import get_customer_by_email, add_to_customers, get_menu_items, get_mods, create_order, add_item, add_mod, view_order, delete_order, delete_order_item
+from helpers import get_customer_by_email, add_to_customers, get_menu_items, get_mods, create_order, add_item, add_mod, view_order, delete_order, delete_order_item, print_customer_details
 
 
-# 1
-def view_menu_items():
-    menu_items = get_menu_items(session)
-    for item in menu_items:
-        print(f"{item.id}. {item.item} ${item.price}")
-
-
-# 2
-def view_mods():
-    mods = get_mods(session)
-    for mod in mods:
-        print(f"{mod.id}. {mod.mod_item}, + ${mod.mod_price}")
-
-
-# 3
+# 1. CUSTOMER MANAGEMENT
+# 1.1 find customer
 def find_customer():
     email = input("Enter customer email (or 'q' to exit): ").strip()
     if email.lower() == "q":
@@ -24,30 +11,40 @@ def find_customer():
     else:
         customer = get_customer_by_email(session, email)
         if customer:
-            print(f"Customer found: {customer.id} {customer.first_name}")
+            print_customer_details(customer)
         else:
             print("Customer not found")
             add_customer = input("Would you like to add a customer? Y/N: ")
             if add_customer.lower() == "y":
-                create_new_customer(email)
+                new_customer = create_new_customer(email)
+                print_customer_details(new_customer)
 
 
-# 3.1
+# 1.2 new customer
 def create_new_customer(email):
     new_first_name = input("Enter customer's first name: ")
     new_last_name = input("Enter customer's last name: ")
     new_email = email
-    add_to_customers(session, new_first_name, new_last_name, new_email)
+    new_customer = add_to_customers(
+        session, new_first_name, new_last_name, new_email)
+    return (new_customer)
 
 
-# 4
+# 2. NEW ORDER
 def new_order():
     customer_id = input("Enter customer id: ")
     create_order(session, int(customer_id))
-    # flush?
 
 
-# 5
+# 3. ADD ITEM
+# 3.1 view items
+def view_menu_items():
+    menu_items = get_menu_items(session)
+    for item in menu_items:
+        print(f"{item.id}. {item.item} ${item.price}")
+
+
+# 3.2 add item
 def new_item():
     order_id = input("Enter order id: ")
     menu_item_id = input("Enter menu item number: ")
@@ -56,7 +53,15 @@ def new_item():
     add_item(session, int(order_id), int(menu_item_id), int(quantity))
 
 
-# 6
+# 4. ADD MOD TO ITEM
+# 4.1 view mods
+def view_mods():
+    mods = get_mods(session)
+    for mod in mods:
+        print(f"{mod.id}. {mod.mod_item}, + ${mod.mod_price}")
+
+
+# 4.2 add mod
 def add_mod_to_item():
     item_id = input("Enter item_id: ")
     while True:
@@ -66,20 +71,8 @@ def add_mod_to_item():
         else:
             add_mod(session, int(item_id), int(mod))
 
-
-# 7 Finalise/update order
-def update_order(session):
-    while True:
-        print("a. Add item")
-        print("b. Delete item")
-        choice = input("Select an action (or 'q' to exit): ")
-        if choice.lower() == "q":
-            break
-        elif choice.lower() == "a":
-            new_item()
-        elif choice.lower() == "b":
-            item_id = input("Which item would you like to delete? ")
-            delete_order_item(session, int(item_id))
+# 5. FINALISE ORDER
+# 5.1 view order and make choice:
 
 
 def finalise_order():
@@ -104,38 +97,49 @@ def finalise_order():
             delete_order(session, int(order_id))
 
 
+# 5.2 update order
+def update_order(session):
+    while True:
+        print("a. Add item")
+        print("b. Delete item")
+        choice = input("Select an action (or 'q' to exit): ")
+        if choice.lower() == "q":
+            break
+        elif choice.lower() == "a":
+            new_item()
+        elif choice.lower() == "b":
+            item_id = input("Which item would you like to delete? ")
+            delete_order_item(session, int(item_id))
+
+
 # CLI Menu
 if __name__ == "__main__":
-    print("☕ CLI Cafe started")
+    print("☕ Welcome to the CLI Café")
 
     while True:
-        print("Options:")
-        print("1. View menu")
-        print("2. View mods")
-        print("3. Find customer")
-        print("4. New Order")
-        print("5. Add Item")
-        print("6. Add mod to item")
-        print("7. Finalise order")
-        print("8. Exit")
+        print("Please select an option:")
+        print("1. Find customer")
+        print("2. Create new order")
+        print("3. Add item")
+        print("4. Add mod to item")
+        print("5. Finalise order")
+        print("6. Exit")
 
         choice = input("What would you like to do? Select a number: ")
 
         if choice == "1":
-            view_menu_items()
-        elif choice == "2":
-            view_mods()
-        elif choice == "3":
             find_customer()
-        elif choice == "4":
+        elif choice == "2":
             new_order()
-        elif choice == "5":
+        elif choice == "3":
+            view_menu_items()
             new_item()
-        elif choice == "6":
+        elif choice == "4":
+            view_mods()
             add_mod_to_item()
-        elif choice == "7":
+        elif choice == "5":
             finalise_order()
-        elif choice == "8":
+        elif choice == "6":
             print("Ciao!")
             break
         else:

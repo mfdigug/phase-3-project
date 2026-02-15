@@ -1,25 +1,15 @@
 from db.models import Base, MenuItem, Mod, Customer, OrderItemMod, Order, OrderItem
 
 
-# 1 View Menu
-def get_menu_items(session):
-    items = session.query(MenuItem).all()
-    return items
-
-
-# 2 View Mods
-def get_mods(session):
-    mods = session.query(Mod).all()
-    return mods
-
-
-# 3. Find/Add customer
+# 1. CUSTOMER MANAGEMENT
+# 1.1 get customer
 def get_customer_by_email(session, email):
     customer = session.query(Customer).filter(Customer.email == email).first()
     return customer
 
+# 1.2 new customer
 
-# 3.1 if not customer - add customer
+
 def add_to_customers(session, new_first_name, new_last_name, new_email):
     new_customer = Customer(
         first_name=new_first_name,
@@ -29,16 +19,16 @@ def add_to_customers(session, new_first_name, new_last_name, new_email):
 
     session.add(new_customer)
     session.commit()
-    print("Customer has been added!")
+    return new_customer
 
-    # check customer's orders
-    # customer.orders
-    # for orders in customer.orders:
-    # print(order.id)
-    # print(order.customer.name)
+# 1.3 view details
 
 
-# 4 New Order
+def print_customer_details(customer):
+    print(f"Customer {customer.first_name} ID {customer.id} ")
+
+
+# 2 CREATE NEW ORDER
 def create_order(session, customer_id):
     new_order = Order(
         customer_id=customer_id,
@@ -48,7 +38,14 @@ def create_order(session, customer_id):
     print(f"Order Number: {new_order.id} has been created")
 
 
-# 5 Add Order Item to Order
+# 3 ADD ITEM TO ORDER
+# 3.1 View Menu
+def get_menu_items(session):
+    items = session.query(MenuItem).all()
+    return items
+# 3.2 Add item
+
+
 def add_item(session, order_id, menu_item_id, quantity):
     new_item = OrderItem(
         order_id=order_id,
@@ -60,7 +57,14 @@ def add_item(session, order_id, menu_item_id, quantity):
     print(f"{new_item.id}")
 
 
-# 6 Add mod to item
+# 4 ADD MOD TO ITEM
+# 4.1 view mods
+def get_mods(session):
+    mods = session.query(Mod).all()
+    return mods
+# 4.2 add mod
+
+
 def add_mod(session, item_id, mod_id):
     order_item = session.query(OrderItem).filter(
         OrderItem.id == item_id).first()
@@ -75,7 +79,8 @@ def add_mod(session, item_id, mod_id):
     print(f"{order_item.mods} added to {order_item.menu_item.item}!")
 
 
-# 7 Finalise order = view/update/confirm
+# 5 FINALISE ORDER
+# 5.1 view order
 def view_order(session, order_id):
     order = session.query(Order).filter(Order.id == order_id).first()
 
@@ -100,7 +105,7 @@ def view_order(session, order_id):
     print("*" * 10)
 
 
-# 7.1 modify order
+# 5.2 modify order - delete item
 def delete_order_item(session, item_id):
     item = session.query(OrderItem).get(item_id)
     if not item:
@@ -112,7 +117,7 @@ def delete_order_item(session, item_id):
     print("Order item has been deleted.")
 
 
-# 7.2 Delete order
+# 5.3 Delete order
 def delete_order(session, order_id):
     order = session.query(Order).filter(
         Order.id == order_id).first()

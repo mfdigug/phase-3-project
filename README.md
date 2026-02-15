@@ -38,14 +38,12 @@ Then follow the prompts
 
 ## CLI Flow:
 
-1. View menu
-2. View mods
-3. Find custoer
-4. New Order
-5. Add Item
-6. Add mod to item
-7. Finalise order
-8. Exit
+1. Find custoer
+2. New Order
+3. Add Item
+4. Add mod to item
+5. Finalise order
+6. Exit
 
 ## Database Schema
 
