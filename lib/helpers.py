@@ -7,9 +7,9 @@ def get_customer_by_email(session, email):
     customer = session.query(Customer).filter(Customer.email == email).first()
     return customer
 
+
+
 # 1.2 new customer
-
-
 def add_to_customers(session, new_first_name, new_last_name, email):
     new_customer = Customer(
         first_name=new_first_name,
@@ -21,9 +21,9 @@ def add_to_customers(session, new_first_name, new_last_name, email):
     session.commit()
     return new_customer
 
+
+
 # 1.3 view details
-
-
 def print_customer_details(customer):
     print(f"""
     ******
@@ -49,13 +49,7 @@ def create_order(session, customer_id):
 
 
 # 3 ADD ITEM TO ORDER
-# 3.1 View Menu
-def get_menu_items(session):
-    items = session.query(MenuItem).all()
-    return items
-# 3.2 Add item
-
-
+# 3.1 Add item
 def add_item(session, order_id, menu_item_id, quantity):
     new_item = OrderItem(
         order_id=order_id,
@@ -72,14 +66,19 @@ def add_item(session, order_id, menu_item_id, quantity):
     return new_item
 
 
-# 4 ADD MOD TO ITEM
-# 4.1 view mods
+# 3.2 View Menu
+def get_menu_items(session):
+    items = session.query(MenuItem).all()
+    return items
+
+
+# ADD MOD TO ITEM
+# 3.3 view mods
 def get_mods(session):
     mods = session.query(Mod).all()
     return mods
 
-
-# 4.2 add mod
+# 3.4 add mods
 def add_mod(session, item_id, mod_id):
     order_item = session.query(OrderItem).filter(
         OrderItem.id == item_id).first()
@@ -99,8 +98,8 @@ def add_mod(session, item_id, mod_id):
     """)
 
 
-# 5 FINALISE ORDER
-# 5.1 view order
+# 4 FINALISE ORDER
+# 4.1 view order
 def view_order(session, order_id):
     order = session.query(Order).filter(Order.id == order_id).first()
 
@@ -110,7 +109,7 @@ def view_order(session, order_id):
 
     print("*" * 10)
     print(f"""
-    Order: {order.id}"
+    Order: {order.id}
     Customer: {order.customer.first_name}
     """)
     print("*" * 10)
@@ -127,7 +126,7 @@ def view_order(session, order_id):
     print("*" * 10)
 
 
-# 5.2 modify order - delete item
+# 4.2 modify order - delete item
 def delete_order_item(session, item_id):
     item = session.query(OrderItem).get(item_id)
     if not item:
@@ -139,7 +138,7 @@ def delete_order_item(session, item_id):
     print("******\n Item has been deleted. \n******")
 
 
-# 5.3 Delete order
+# 4.3 Delete order
 def delete_order(session, order_id):
     order = session.query(Order).filter(
         Order.id == order_id).first()
