@@ -1,37 +1,33 @@
-import click
 from db.db_setup import session
 from helpers import get_customer_by_email, add_to_customers, get_menu_items, get_mods, create_order, add_item, add_mod, view_order, delete_order, delete_order_item, print_customer_details
 
 
 # 1. CUSTOMER MANAGEMENT
 # 1.1 find customer
-@click.command()
-@click.option('--email', prompt="Enter customer email (or 'q' to exit)", help="Customer email")
-def find_customer(email):
+def find_customer():
+    email = input("Enter customer email (or 'q' to exit): ").strip()
     if email.lower() == "q":
         return
-    customer = get_customer_by_email(session, email)
-    if customer:
-        click.echo("\nCustomer found:\n")
-        print_customer_details(customer)
     else:
-        print("Customer not found")
-        if click.confirm("Would you like to add a customer?"):
-            new_customer = create_new_customer(email)
-            
+        customer = get_customer_by_email(session, email)
+        if customer:
+            print_customer_details(customer)
+        else:
+            print("Customer not found")
+            add_customer = input("Would you like to add a customer? Y/N: ")
+            if add_customer.lower() == "y":
+                new_customer = create_new_customer(email)
+                print_customer_details(new_customer)
 
 
 # 1.2 new customer
 def create_new_customer(email):
-    new_first_name = click.prompt("Enter customer's first name")
-    new_last_name = click.prompt("Enter customer's last name")
-
+    new_first_name = input("Enter customer's first name: ")
+    new_last_name = input("Enter customer's last name: ")
+    new_email = email
     new_customer = add_to_customers(
-        session, new_first_name, new_last_name, email)
-    click.echo("\nCustomer successfully created:\n")
-    print_customer_details(new_customer)
-    
-    return new_customer
+        session, new_first_name, new_last_name, new_email)
+    return (new_customer)
 
 
 # 2. NEW ORDER
