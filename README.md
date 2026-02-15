@@ -1,8 +1,10 @@
-#Café Order Management System
+# Café Order Management System
+
 A command-line ordering system for a café (selling caffeine only), built with Python and SQLAlchemy ORM.
 This application allows users to create orders, add menu items and modify those items before reviewing, updating or deleting an order.
 
-##Overview
+## Overview
+
 This project simulates a basic Point of Sale (POS) system for a café. It demonstrates:
 
 - Object-relational mapping using SQLAlchemy
@@ -11,7 +13,7 @@ This project simulates a basic Point of Sale (POS) system for a café. It demons
 - CCLI architecture
 - Separation of concerns (models, helpers, CLI)
 
-##Tech Stack
+## Tech Stack
 
 - python 3.8+
 - SQLAlchemy ORM
@@ -20,7 +22,7 @@ This project simulates a basic Point of Sale (POS) system for a café. It demons
 - Pipenv
 - Click
 
-##Installation & Setup
+## Installation & Setup
 
 1. Fork & clone the repo
 2. cd into the project's directory
@@ -34,7 +36,7 @@ This project simulates a basic Point of Sale (POS) system for a café. It demons
 
 Then follow the prompts
 
-##CLI Flow:
+## CLI Flow:
 
 1. View menu
 2. View mods
@@ -45,20 +47,25 @@ Then follow the prompts
 7. Finalise order
 8. Exit
 
-##Database Schema
-###Models
-####Customer
+## Database Schema
+
+### Models
+
+#### Customer
+
 id
 first_name
 last_name
 Has many Orders
 
-####Order
+#### Order
+
 id
 customer_id
 Has many OrderItems
 
-####OrderItem
+#### OrderItem
+
 id
 quantity
 order_id
@@ -67,18 +74,21 @@ Belongs to an Order
 Belongs to a MenuItem
 Has many Mods (many-to-many)
 
-####MenuItem
+#### MenuItem
+
 id
 item
 price
 Has many OrderItems
 
-####Mod
+#### Mod
+
 id
 mod_item
 mod_price
 Belongs to many OrderItems
 
-####order_item_mods (Association Table)
+#### order_item_mods (Association Table)
+
 order_item_id
 mod_id
