@@ -25,7 +25,7 @@ def add_to_customers(session, new_first_name, new_last_name, new_email):
 
 
 def print_customer_details(customer):
-    print(f"Customer {customer.first_name} ID {customer.id} ")
+    print(f"\n *** Customer {customer.first_name} ID {customer.id} *** \n")
 
 
 # 2 CREATE NEW ORDER
@@ -35,7 +35,7 @@ def create_order(session, customer_id):
     )
     session.add(new_order)
     session.commit()
-    print(f"Order Number: {new_order.id} has been created")
+    print(f"\n *** Order Number: {new_order.id} has been created *** \n")
 
 
 # 3 ADD ITEM TO ORDER
@@ -54,7 +54,7 @@ def add_item(session, order_id, menu_item_id, quantity):
     )
     session.add(new_item)
     session.commit()
-    print(f"{new_item.id}")
+    print(f" \n *** Item ID: {new_item.id} added to {order_id} *** \n")
 
 
 # 4 ADD MOD TO ITEM
@@ -62,21 +62,22 @@ def add_item(session, order_id, menu_item_id, quantity):
 def get_mods(session):
     mods = session.query(Mod).all()
     return mods
+
+
 # 4.2 add mod
-
-
 def add_mod(session, item_id, mod_id):
     order_item = session.query(OrderItem).filter(
         OrderItem.id == item_id).first()
     mod = session.query(Mod).filter(Mod.id == mod_id).first()
 
     if not order_item or not mod:
-        print("item or mod not found")
+        print("ERROR: item or mod not found")
         return
 
     order_item.mods.append(mod)
     session.commit()
-    print(f"{order_item.mods} added to {order_item.menu_item.item}!")
+    print(
+        f"\n *** {order_item.mods} added to {order_item.menu_item.item}! *** \n")
 
 
 # 5 FINALISE ORDER
@@ -114,7 +115,7 @@ def delete_order_item(session, item_id):
 
     session.delete(item)
     session.commit()
-    print("Order item has been deleted.")
+    print("\n *** Item has been deleted. *** \n")
 
 
 # 5.3 Delete order
@@ -128,4 +129,4 @@ def delete_order(session, order_id):
 
     session.delete(order)
     session.commit()
-    print(f"Order number {order_id} deleted")
+    print(f"\n *** Order number {order_id} deleted. *** \n")

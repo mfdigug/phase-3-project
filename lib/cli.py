@@ -33,7 +33,8 @@ def create_new_customer(email):
 # 2. NEW ORDER
 def new_order():
     customer_id = input("Enter customer id: ")
-    create_order(session, int(customer_id))
+    order = create_order(session, int(customer_id))
+    return order
 
 
 # 3. ADD ITEM
@@ -46,10 +47,29 @@ def view_menu_items():
 
 # 3.2 add item
 def new_item():
-    order_id = input("Enter order id: ")
-    menu_item_id = input("Enter menu item number: ")
-    quantity = input("Enter quantity: ")
-    print(f"Order Number: {order_id}, Item: {menu_item_id}")
+
+    order_id = input("To add an item, enter the order number: ")
+    if not order_id:
+        order = new_order(session)
+        order_id = order.id
+    else:
+        order_id = int(order_id)
+
+    menu_item_id = input(
+        "Enter the menu item number to add it to your order: ")
+    if not menu_item_id:
+        print("There is no item with that id")
+        return
+    else:
+        menu_item_id = int(menu_item_id)
+
+    quantity = input(f"How many would you like?")
+    if not quantity.isdigit():
+        print("quantity must be a number")
+        return
+
+    print(
+        f"Item added to order Number: {order_id}, Item ID: {menu_item_id}, Quantity added: {quantity}")
     add_item(session, int(order_id), int(menu_item_id), int(quantity))
 
 
@@ -63,7 +83,8 @@ def view_mods():
 
 # 4.2 add mod
 def add_mod_to_item():
-    item_id = input("Enter item_id: ")
+    item_id = input(
+        "Enter the item ID for the item you would like to modify: ")
     while True:
         mod = input("Add modification (or type 'q' to quit): ")
         if mod.lower() == 'q':
@@ -71,10 +92,9 @@ def add_mod_to_item():
         else:
             add_mod(session, int(item_id), int(mod))
 
+
 # 5. FINALISE ORDER
 # 5.1 view order and make choice:
-
-
 def finalise_order():
     order_id = input("Enter order number: ")
     view_order(session, int(order_id))
