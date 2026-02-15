@@ -63,13 +63,11 @@ def new_item():
     else:
         menu_item_id = int(menu_item_id)
 
-    quantity = input(f"How many would you like?")
+    quantity = input(f"How many would you like? ")
     if not quantity.isdigit():
         print("quantity must be a number")
         return
 
-    print(
-        f"Item added to order Number: {order_id}, Item ID: {menu_item_id}, Quantity added: {quantity}")
     add_item(session, int(order_id), int(menu_item_id), int(quantity))
 
 

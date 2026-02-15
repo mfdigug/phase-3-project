@@ -99,10 +99,10 @@ def view_order(session, order_id):
         print(f"{item.menu_item.item} ${item.menu_item.price:.2f}")
         for mod in item.mods:
             print(f" + {mod.mod_item} (${mod.mod_price:.2f})")
-        print(f"${item.subtotal()}\n")
+        print(f"**********${item.subtotal()}\n")
 
     print("*" * 10)
-    print(f"${order.order_total()}")
+    print(f"Order Total = ${order.order_total()}")
     print("*" * 10)
 
 
