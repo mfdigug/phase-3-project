@@ -53,42 +53,42 @@ Then follow the prompts
 
 #### Customer
 
-id
-first_name
-last_name
-Has many Orders
+- id
+- first_name
+- last_name
+- Has many Orders
 
 #### Order
 
-id
-customer_id
-Has many OrderItems
+- id
+- customer_id
+- Has many OrderItems
 
 #### OrderItem
 
-id
-quantity
-order_id
-menu_item_id
-Belongs to an Order
-Belongs to a MenuItem
-Has many Mods (many-to-many)
+- id
+- quantity
+- order_id
+- menu_item_id
+- Belongs to an Order
+- Belongs to a MenuItem
+- Has many Mods (many-to-many)
 
 #### MenuItem
 
-id
-item
-price
-Has many OrderItems
+- id
+- item
+- price
+- Belongs to many OrderItems
 
 #### Mod
 
-id
-mod_item
-mod_price
-Belongs to many OrderItems
+- id
+- mod_item
+- mod_price
+- Belongs to many OrderItems
 
 #### order_item_mods (Association Table)
 
-order_item_id
-mod_id
+- order_item_id
+- mod_id
