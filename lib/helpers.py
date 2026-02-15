@@ -69,6 +69,7 @@ def add_item(session, order_id, menu_item_id, quantity):
     Item ID: {new_item.id} added to {order_id}.
     ******
     """)
+    return new_item
 
 
 # 4 ADD MOD TO ITEM

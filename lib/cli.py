@@ -42,64 +42,67 @@ def new_order():
 
 
 # 3. ADD ITEM
-# 3.1 view items
+
+# 3.1 add item
+@click.command()
+@click.option("--order-id", prompt="To add an item, enter the order number (leave blank to create new)", default="", show_default=False)
+def new_item(order_id):
+    if not order_id:
+        order = new_order()
+        order_id = order.id
+    else:
+        if not order_id.isdigit():
+            click.echo("Order number must be numeric")
+            return
+        order_id = int(order_id)
+    
+    add_more_items = True
+    while add_more_items:
+
+        menu_items = get_menu_items(session)
+        valid_ids = [item.id for item in menu_items]
+        while True:
+            menu_item_id = click.prompt("Enter the menu item number to add", type=int)
+            if menu_item_id in valid_ids:
+                break
+            click.echo("There is no menu item with that id")
+
+        quantity = click.prompt(f"How many would you like?", type=int)
+
+        new_order_item = add_item(session, order_id, menu_item_id, quantity)
+
+        item_id = new_order_item.id
+
+        while click.confirm("Would you like to modify this item?"):
+            view_mods()
+            mod_id = click.prompt("Enter mod ID to add", type=int)
+            add_mod(session, item_id, mod_id)
+
+        choice = click.prompt("Do you want to: (a) add another item, or (b) finalise order?", type=click.Choice(['a', 'b'], case_sensitive=False))
+        if choice == 'b':
+            finalise_order(session, order_id)
+            add_more_items = False
+
+
+# 3.2 view items
 def view_menu_items():
     menu_items = get_menu_items(session)
     for item in menu_items:
-        print(f"{item.id}. {item.item} ${item.price}")
+        click.echo(f"{item.id}. {item.item} ${item.price}")
 
-
-# 3.2 add item
-def new_item():
-
-    order_id = input("To add an item, enter the order number: ")
-    if not order_id:
-        order = new_order(session)
-        order_id = order.id
-    else:
-        order_id = int(order_id)
-
-    menu_item_id = input(
-        "Enter the menu item number to add it to your order: ")
-    if not menu_item_id:
-        print("There is no item with that id")
-        return
-    else:
-        menu_item_id = int(menu_item_id)
-
-    quantity = input(f"How many would you like? ")
-    if not quantity.isdigit():
-        print("quantity must be a number")
-        return
-
-    add_item(session, int(order_id), int(menu_item_id), int(quantity))
-
-
-# 4. ADD MOD TO ITEM
-# 4.1 view mods
+# 3.3 view mods
 def view_mods():
     mods = get_mods(session)
     for mod in mods:
         print(f"{mod.id}. {mod.mod_item}, + ${mod.mod_price}")
 
-
-# 4.2 add mod
-def add_mod_to_item():
-    item_id = input(
-        "Enter the item ID for the item you would like to modify: ")
-    while True:
-        mod = input("Add modification (or type 'q' to quit): ")
-        if mod.lower() == 'q':
-            break
-        else:
-            add_mod(session, int(item_id), int(mod))
-
+            
 
 # 5. FINALISE ORDER
 # 5.1 view order and make choice:
-def finalise_order():
+def finalise_order(session, order_id):
     order_id = input("Enter order number: ")
-    view_order(session, int(order_id))
+    view_order(session, order_id)
     while True:
         print("1. Confirm order")
         print("2. Modify order")
