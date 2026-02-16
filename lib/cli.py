@@ -39,9 +39,8 @@ def new_order(session):
 
 
 # 3. ADD ITEM
-# 3.1 add item
 def new_item(session, order_id):
-
+    # 3.1 check if order number exists
     if order_id:
         order = check_for_order(session, order_id)
         if not order:
@@ -55,11 +54,12 @@ def new_item(session, order_id):
             return
         order_id = int(order_id)
 
-    # 3.2
+    # 3.2 view menu
     view_menu_items()
+
+    # loop add items
     add_more_items = True
     while add_more_items:
-
         menu_items = get_menu_items(session)
         valid_ids = [item.id for item in menu_items]
         while True:
@@ -68,25 +68,21 @@ def new_item(session, order_id):
             if menu_item_id in valid_ids:
                 break
             click.echo("There is no menu item with that id")
-
         quantity = click.prompt(f"How many would you like?", type=int)
-        # commit item
+        # commit item and assign id
         new_order_item = add_item(session, order_id, menu_item_id, quantity)
-
         item_id = new_order_item.id
-
+        # add mods
         while click.confirm("Would you like to modify this item?"):
             # 3.3 view mods
             view_mods()
             # 3.4 add mods
             mod_id = click.prompt("Enter mod ID to add", type=int)
             add_mod(session, item_id, mod_id)
-
+        # loop
         choice = click.prompt(
             "Do you want to: (a) add another item, or (b) finalise order?",
-            type=click.Choice(['a', 'b'],
-                              case_sensitive=False))
-
+            type=click.Choice(['a', 'b'], case_sensitive=False))
         if choice == 'b':
             finalise_order(session, order_id)
             add_more_items = False

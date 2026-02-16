@@ -47,6 +47,10 @@ def create_order(session, customer_id):
     return new_order
 
 
+# 3 ADD ITEM TO ORDER
+
+
+# 3.1 check order exists
 def check_for_order(session, order_id):
     order = session.query(Order).filter(Order.id == order_id).first()
     if not order:
@@ -55,9 +59,7 @@ def check_for_order(session, order_id):
         return None
     else:
         return order
-
-# 3 ADD ITEM TO ORDER
-# 3.1 Add item
+# 3.1 commit item
 
 
 def add_item(session, order_id, menu_item_id, quantity):
@@ -93,9 +95,8 @@ def get_mods(session):
     mods = session.query(Mod).all()
     return mods
 
+
 # 3.4 add mods
-
-
 def add_mod(session, item_id, mod_id):
     order_item = session.query(OrderItem).filter(
         OrderItem.id == item_id).first()
