@@ -8,7 +8,6 @@ def get_customer_by_email(session, email):
     return customer
 
 
-
 # 1.2 new customer
 def add_to_customers(session, new_first_name, new_last_name, email):
     new_customer = Customer(
@@ -20,7 +19,6 @@ def add_to_customers(session, new_first_name, new_last_name, email):
     session.add(new_customer)
     session.commit()
     return new_customer
-
 
 
 # 1.3 view details
@@ -46,11 +44,27 @@ def create_order(session, customer_id):
     Order Number: {new_order.id} has been created.
     ******
     """)
+    return new_order
 
+
+def check_for_order(session, order_id):
+    order = session.query(Order).filter(Order.id == order_id).first()
+    if not order:
+        print(
+            f"Order {order_id} not found.Create a new order by leaving this blank.")
+        return None
+    else:
+        return order
 
 # 3 ADD ITEM TO ORDER
 # 3.1 Add item
+
+
 def add_item(session, order_id, menu_item_id, quantity):
+
+    item_name = session.query(MenuItem).filter(
+        MenuItem.id == menu_item_id).first()
+
     new_item = OrderItem(
         order_id=order_id,
         menu_item_id=menu_item_id,
@@ -60,7 +74,8 @@ def add_item(session, order_id, menu_item_id, quantity):
     session.commit()
     print(f"""
     ******
-    Item ID: {new_item.id} added to {order_id}.
+    {item_name} added to {order_id}.
+    Ref: {new_item.id}
     ******
     """)
     return new_item
@@ -79,6 +94,8 @@ def get_mods(session):
     return mods
 
 # 3.4 add mods
+
+
 def add_mod(session, item_id, mod_id):
     order_item = session.query(OrderItem).filter(
         OrderItem.id == item_id).first()
@@ -107,23 +124,20 @@ def view_order(session, order_id):
         print("******\n Order not found. \n******")
         return
 
-    print("*" * 10)
-    print(f"""
-    Order: {order.id}
-    Customer: {order.customer.first_name}
-    """)
-    print("*" * 10)
+    print("*" * 35)
+    print(f"Order: {order.id:<5} Customer: {order.customer.first_name}")
+    print("*" * 35)
 
     for item in order.order_items:
-        print(f"{item.menu_item.item} ${item.menu_item.price:.2f}")
+        print(f"{item.menu_item.item:<20} {f'${item.menu_item.price:.2f}':>10}")
+
         for mod in item.mods:
-            print(f"""
-                + {mod.mod_item} (${mod.mod_price:.2f})"
-                ${item.subtotal():.2f}
-            """)
-    print("*" * 10)
-    print(f"Order Total = ${order.order_total():.2f}")
-    print("*" * 10)
+            print(
+                f"+ {mod.mod_item:<18} {f'${mod.mod_price:.2f}':>10}\n  subtotal: {f'${item.subtotal():.2f}':>19}\n")
+    print("*" * 35)
+    print(f"Order Total = {f'${order.order_total():.2f}':>10}")
+    print("*" * 35)
+    print("\n")
 
 
 # 4.2 modify order - delete item
