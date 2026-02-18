@@ -48,9 +48,11 @@ def new_item(session, order_id):
         order_id = order.id
         return order
 
-    if not order_id.isdigit():
-        click.echo("Order number must be numeric")
-        return
+    if isinstance(order_id, str):
+        if not order_id.isdigit():
+            click.echo("Order number must be numeric")
+            return
+        order_id = int(order_id)
 
     order_id = int(order_id)
     order = check_for_order(session, order_id)
@@ -121,16 +123,16 @@ def finalise_order(session, order_id=None):
         print("3. Delete order")
 
         choice = click.prompt(
-            "Please select a number (or 'q' to exit)", type=click.Choice(['q', '1', '2', '3'], case_sensitive=False)
+            "Please select a number (or 'q' to exit)", type=click.Choice(['q', '1', '2', '3'])
         )
 
-        if choice == "q":
+        if choice.lower() == "q":
             return
         elif choice == "1":
             print(f"Order {order_id} confirmed")
             return
         elif choice == "2":
-            update_order(session)
+            update_order(session, order_id)
         elif choice == "3":
             delete_order(session, order_id)
         else:
@@ -138,17 +140,17 @@ def finalise_order(session, order_id=None):
 
 
 # 5.2 update order
-def update_order(session):
+def update_order(session, order_id):
     while True:
         print("1. Add item")
         print("2. Delete item")
         choice = click.prompt(
-            "Please select an option (or 'q' to exit)", type=click.Choice(['q', '1', '2']), case_sensitive=False
+            "Please select an option (or 'q' to exit)", type=click.Choice(['q', '1', '2'])
         )
-        if choice == "q":
+        if choice.lower() == "q":
             break
         elif choice == "1":
-            new_item()
+            new_item(session, order_id)
         elif choice == "2":
             item_id = click.prompt(
                 "Which item would you like to delete?", type=int)

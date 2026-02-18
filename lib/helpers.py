@@ -24,11 +24,11 @@ def add_to_customers(session, new_first_name, new_last_name, email):
 # 1.3 view details
 def print_customer_details(customer):
     print(f"""
-    ******
+    ************************
     Customer ID {customer.id}
     Name: {customer.first_name} {customer.last_name}
     email {customer.email}
-    ******
+    ************************
     """)
 
 
@@ -40,9 +40,9 @@ def create_order(session, customer_id):
     session.add(new_order)
     session.commit()
     print(f"""
-    ****** 
+    ************************************ 
     Order Number: {new_order.id} has been created.
-    ******
+    ************************************
     """)
     return new_order
 
@@ -70,10 +70,10 @@ def add_item(session, order_id, menu_item_id, quantity):
     session.add(new_item)
     session.commit()
     print(f"""
-    ******
+    ************************
     {item_name} added to {order_id}.
     Ref: {new_item.id}
-    ******
+    ************************
     """)
     return new_item
 
@@ -98,16 +98,16 @@ def add_mod(session, item_id, mod_id):
     mod = session.query(Mod).filter(Mod.id == mod_id).first()
 
     if not order_item or not mod:
-        print("******\n Item or mod not found. \n******")
+        print("************\n Item or mod not found. \n************")
         return
 
     order_item.mods.append(mod)
 
     session.commit()
     print(f"""
-    ******
+    ******************************************
     {order_item.mods} added to {order_item.menu_item.item}!
-    ******
+    ******************************************
     """)
 
 
@@ -117,7 +117,7 @@ def view_order(session, order_id):
     order = session.query(Order).filter(Order.id == order_id).first()
 
     if not order:
-        print("******\n Order not found. \n******")
+        print("************\n Order not found. \n************")
         return
 
     print("*" * 35)
@@ -125,11 +125,14 @@ def view_order(session, order_id):
     print("*" * 35)
 
     for item in order.order_items:
-        print(f"{item.menu_item.item:<20} {f'${item.menu_item.price:.2f}':>10}")
+        print(
+            f"{item.menu_item.item:<20} x{item.quantity} {f'${item.menu_item.price:.2f}':>7}")
 
         for mod in item.mods:
             print(
-                f"+ {mod.mod_item:<18} {f'${mod.mod_price:.2f}':>10}\n  subtotal: {f'${item.subtotal():.2f}':>19}\n")
+                f"+ {mod.mod_item:<18} {f'${mod.mod_price:.2f}':>10}\n")
+
+        print(f"subtotal: {f'${item.subtotal():.2f}':>19}\n")
     print("*" * 35)
     print(f"Order Total = {f'${order.order_total():.2f}':>10}")
     print("*" * 35)
@@ -140,12 +143,12 @@ def view_order(session, order_id):
 def delete_order_item(session, item_id):
     item = session.query(OrderItem).get(item_id)
     if not item:
-        print("******\n Order item not found \n******")
+        print("************\n Order item not found \n************")
         return
 
     session.delete(item)
     session.commit()
-    print("******\n Item has been deleted. \n******")
+    print("************\n Item has been deleted. \n************")
 
 
 # 4.3 Delete order
@@ -154,9 +157,9 @@ def delete_order(session, order_id):
         Order.id == order_id).first()
 
     if not order:
-        print("******\n Order not found. \n******")
+        print("************\n Order not found. \n************")
         return
 
     session.delete(order)
     session.commit()
-    print(f"******\n Order number {order_id} deleted. \n******")
+    print(f"************\n Order number {order_id} deleted. \n************")
