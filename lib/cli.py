@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import click
 from db.db_setup import session
 from helpers import get_customer_by_email, add_to_customers, get_menu_items, get_mods, create_order, add_item, add_mod, view_order, delete_order, delete_order_item, print_customer_details, check_for_order
@@ -41,18 +43,20 @@ def new_order(session):
 # 3. ADD ITEM
 def new_item(session, order_id):
     # 3.1 check if order number exists
-    if order_id:
-        order = check_for_order(session, order_id)
-        if not order:
-            return
-    elif not order_id:
+    if order_id == "":
         order = new_order(session)
         order_id = order.id
-    else:
-        if not order_id.isdigit():
-            click.echo("Order number must be numeric")
-            return
-        order_id = int(order_id)
+        return order
+
+    if not order_id.isdigit():
+        click.echo("Order number must be numeric")
+        return
+
+    order_id = int(order_id)
+    order = check_for_order(session, order_id)
+    if not order:
+        click.echo(f"Order does not exist")
+        return
 
     # 3.2 view menu
     view_menu_items()
@@ -83,6 +87,8 @@ def new_item(session, order_id):
         choice = click.prompt(
             "Do you want to: (a) add another item, or (b) finalise order?",
             type=click.Choice(['a', 'b'], case_sensitive=False))
+        if choice == 'a':
+            continue
         if choice == 'b':
             finalise_order(session, order_id)
             add_more_items = False
@@ -173,7 +179,7 @@ def main_menu(session):
             new_order(session)
         elif choice == "3":
             order_id = click.prompt(
-                "Enter the order id or leave blank to create new order")
+                "Enter the order id or leave blank to create new order", default="", show_default=False)
             new_item(session, order_id)
         elif choice == "4":
             finalise_order(session, None)

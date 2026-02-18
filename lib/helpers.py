@@ -53,15 +53,10 @@ def create_order(session, customer_id):
 # 3.1 check order exists
 def check_for_order(session, order_id):
     order = session.query(Order).filter(Order.id == order_id).first()
-    if not order:
-        print(
-            f"Order {order_id} not found.Create a new order by leaving this blank.")
-        return None
-    else:
-        return order
+    return order
+
+
 # 3.1 commit item
-
-
 def add_item(session, order_id, menu_item_id, quantity):
 
     item_name = session.query(MenuItem).filter(
