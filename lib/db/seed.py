@@ -1,7 +1,18 @@
-from models import Customer, MenuItem, Mod
+from models import Customer, MenuItem, Mod, Order, OrderItem, OrderItemMod
 from db_setup import session
 from faker import Faker
 fake = Faker()
+
+
+def delete_records():
+    session.query(OrderItemMod).delete()
+    session.query(OrderItem).delete()
+    session.query(Order).delete()
+    session.query(MenuItem).delete()
+    session.query(Mod).delete()
+    session.query(Customer).delete()
+
+    session.commit()
 
 
 def create_menu_items():
@@ -52,18 +63,8 @@ def create_customers():
     session.commit()
 
 
-# def delete_records():
-#     session.query(OrderItem).delete()
-#     session.query(Order).delete()
-#     session.query(Mod).delete()
-#     session.query(MenuItem).delete()
-#     session.query(Customer).delete()
-
-#     session.commit()
-
-
 if __name__ == '__main__':
-    # delete_records()
+    delete_records()
     create_menu_items()
     create_mods()
     create_customers()
