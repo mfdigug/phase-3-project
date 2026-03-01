@@ -34,8 +34,9 @@ def create_new_customer(session, email):
 
 
 # 2. NEW ORDER
-def new_order(session):
-    customer_id = click.prompt("Enter customer id", type=int)
+def new_order(session, customer_id=None):
+    if customer_id is None or customer_id == "":
+        customer_id = click.prompt("Enter customer id", type=int)
     order = create_order(session, customer_id)
     return order
 

@@ -3,6 +3,8 @@
 A command-line ordering system for a café (selling caffeine only), built with Python and SQLAlchemy ORM.
 This application allows users to create orders, add menu items and modify those items before reviewing, updating or deleting an order.
 
+Here is a video demonstrating the functionality: ([CLI Cafe App Video](https://youtu.be/VUICVI0mVq4))
+
 ## Overview
 
 This project simulates a basic Point of Sale (POS) system for a café. It demonstrates:
